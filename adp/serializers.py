@@ -124,3 +124,8 @@ class RegisterAdminSerializer(serializers.ModelSerializer):
 
         return user 
     
+class DonorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Donor
+        fields = '__all__'
+    
