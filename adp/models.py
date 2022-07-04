@@ -311,9 +311,9 @@ class Donations(models.Model):
     amount_raised = models.IntegerField()
     date_donated = models.DateTimeField(auto_now_add=True)
     type_of_donation = models.CharField(max_length=100)
-    payment_method= models.CharField(default='Paypal')
+    payment_method= models.CharField(default='Paypal', max_length=20)
     charity = models.ForeignKey(Charity, on_delete=models.CASCADE)
-    donation_frequency = models.CharField(choices=DONATION_FREQUENCY)
+    donation_frequency = models.CharField(choices=DONATION_FREQUENCY, max_length=20)
     comment = models.TextField()
 
 class Feedback(models.Model):
