@@ -15,6 +15,11 @@ import os
 import django_heroku
 from decouple import config,Csv
 import dj_database_url
+from django.contrib.messages import constants as messages
+import cloudinary, cloudinary.uploader, cloudinary.api
+
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -68,6 +73,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'adp',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -172,3 +178,17 @@ django_heroku.settings(locals())
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+cloudinary.config( 
+  cloud_name = config('CLOUD_NAME'), 
+  api_key = config('CLOUD_API_KEY'), 
+  api_secret = config('CLOUD_API_SECRET') 
+)
+
+MESSAGE_TAGS={
+    messages.DEBUG: 'alert-secondary',
+    messages.INFO: 'alert-info',
+    messages.SUCCESS: 'alert-success',
+    messages.WARNING: 'alert-warning',
+    messages.ERROR: 'alert-danger',
+}
