@@ -282,7 +282,22 @@ DONATION_FREQUENCY= [
     ('Monthly', ('Monthly')),
     ('Annualy', ('Annualy')),
 ]
-
+class Donor(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    email = models.CharField(max_length=50)
+    phone_number = models.IntegerField(null=True)
+    location = models.CharField(max_length=30)
+    country = models.CharField(choices=COUNTRIES, max_length=50)
+    bio = models.TextField(max_length=700)
+    image = CloudinaryField('image', null=True)
+    # charity = models.ManyToManyField(Charity, on_delete=models.CASCADE,null=True)
+    date_joined = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.user.username
+    
 class Charity(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=60)
@@ -297,24 +312,7 @@ class Charity(models.Model):
     Deadline = models.DateTimeField(auto_now_add=True)
     mission = models.CharField(max_length=100)
     status = models.BooleanField(default=None,null=True)
-    
-    
-class Donor(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    email = models.CharField(max_length=50)
-    phone_number = models.IntegerField(null=True)
-    location = models.CharField(max_length=30)
-    country = models.CharField(choices=COUNTRIES, max_length=50)
-    bio = models.TextField(max_length=700)
-    image = CloudinaryField('image', null=True)
-    charity = models.ForeignKey(Charity, on_delete=models.CASCADE,null=True)
-    date_joined = models.DateTimeField(auto_now_add=True)
-    
-    def __str__(self):
-        return self.user.username
-
+    donor = models.ManyToManyField(Donor)
 
 
 class Donations(models.Model):
@@ -326,6 +324,9 @@ class Donations(models.Model):
     charity = models.ForeignKey(Charity, on_delete=models.CASCADE)
     donation_frequency = models.CharField(choices=DONATION_FREQUENCY,max_length=30)
     comment = models.TextField()
+    
+    def __str__(self):
+        return self.charity.name
 
 class Feedback(models.Model):
     name = models.CharField(max_length=50)
