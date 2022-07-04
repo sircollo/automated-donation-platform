@@ -154,6 +154,6 @@ MESSAGE_TAGS={
 }
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
-    "http://funds-flow.herokuapp.com/"
+    "funds-flow.herokuapp.com"
 
 ]
