@@ -1,5 +1,6 @@
 from django.db import models
 from cloudinary.models import CloudinaryField
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -267,7 +268,14 @@ TARGET_AMOUNT= [
     (1000000,'$1M+'),
 ]
 
+DONATION_FREQUENCY= [
+    ('Once', ('Once')),
+    ('Monthly', ('Monthly')),
+    ('Annualy', ('Annualy')),
+]
+
 class Charity(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=60)
     email = models.CharField(max_length=50)
     location = models.CharField(max_length=50)
@@ -278,11 +286,15 @@ class Charity(models.Model):
     date_joined = models.DateTimeField(auto_now_add=True)
     target_amount = models.IntegerField(choices=TARGET_AMOUNT)
     Deadline = models.DateTimeField(auto_now_add=True)
+    mission = models.CharField(max_length=100)
+    status = models.BooleanField(default=None)
 
 
 
 class Donor(models.Model):
-    name = models.CharField(max_length=50)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
     phone_number = models.IntegerField()
     location = models.CharField(max_length=30)
@@ -295,10 +307,20 @@ class Donor(models.Model):
 
 
 class Donations(models.Model):
-    donor_id = models.IntegerField()
-    # charity_id = models.IntegerField()
+    donor_id = models.ForeignKey(Donor,on_delete=models.CASCADE )
     amount_raised = models.IntegerField()
     date_donated = models.DateTimeField(auto_now_add=True)
     type_of_donation = models.CharField(max_length=100)
-    payment_method= models.IntegerField()
+    payment_method= models.CharField(default='Paypal')
     charity = models.ForeignKey(Charity, on_delete=models.CASCADE)
+    donation_frequency = models.CharField(choices=DONATION_FREQUENCY)
+    comment = models.TextField()
+
+class Feedback(models.Model):
+    name = models.CharField(max_length=50)
+    email = models.CharField(max_length=50)
+    phone_number = models.IntegerField()
+    subject = models.CharField(max_length=100)
+    message = models.TextField(max_length=500)
+
+
