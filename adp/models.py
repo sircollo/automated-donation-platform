@@ -312,7 +312,10 @@ class Charity(models.Model):
     Deadline = models.DateTimeField(auto_now_add=True)
     mission = models.CharField(max_length=100)
     status = models.BooleanField(default=None,null=True)
-    donor = models.ManyToManyField(Donor)
+    donor = models.ManyToManyField(Donor,blank=True)
+    
+    def __str__(self):
+        return self.name
 
 
 class Donations(models.Model):
@@ -334,3 +337,15 @@ class Feedback(models.Model):
     phone_number = models.IntegerField()
     subject = models.CharField(max_length=100)
     message = models.TextField(max_length=500)
+    
+class Beneficiary(models.Model):
+    name = models.CharField(max_length=200)
+    charity = models.ForeignKey(Charity, on_delete=models.CASCADE)
+    contact= models.CharField(max_length=50)
+    location = models.CharField(max_length=50)
+    country = models.CharField(choices=COUNTRIES, max_length=50)
+    donation_received = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.name
+    

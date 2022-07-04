@@ -1,3 +1,4 @@
+from readline import get_current_history_length
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -128,4 +129,11 @@ class DonorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Donor
         fields = '__all__'
-    
+        
+        
+class BeneficiariesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Beneficiary
+        # fields = '__all__'
+        fields = ('id', 'name', 'contact', 'location','country','donation_received')
+        
