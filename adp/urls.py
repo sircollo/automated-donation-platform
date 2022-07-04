@@ -6,7 +6,8 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('signin/', GetTokenPairView.as_view(), name='token_obtain_pair'),
     path('signup/', RegisterDonorView.as_view(), name='signup'),
-    path('signup-charity/', RegisterCharityView.as_view(), name='signup'),
+    path('signup-charity/', RegisterCharityView.as_view(), name='signup-charity'),
+    path('signup-admin/', RegisterAdminView.as_view(), name='signup-admin'),
 ]
 
 # API URLS

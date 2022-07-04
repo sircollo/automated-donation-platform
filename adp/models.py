@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 class User(AbstractUser):
   is_charity = models.BooleanField(default=False)
   is_donor = models.BooleanField(default=False)
+  is_superuser = models.BooleanField(default=False)
+  is_staff = models.BooleanField(default=False)
 
 
 # Create your models here.
@@ -295,10 +297,8 @@ class Charity(models.Model):
     Deadline = models.DateTimeField(auto_now_add=True)
     mission = models.CharField(max_length=100)
     status = models.BooleanField(default=None,null=True)
-
-
-
-
+    
+    
 class Donor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50)
@@ -333,5 +333,3 @@ class Feedback(models.Model):
     phone_number = models.IntegerField()
     subject = models.CharField(max_length=100)
     message = models.TextField(max_length=500)
-
-

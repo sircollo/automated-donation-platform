@@ -25,4 +25,10 @@ class RegisterCharityView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = RegisterCharitySerializer
+    
+# Register adminview 
+class RegisterAdminView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (AllowAny,)
+    serializer_class = RegisterAdminSerializer
   
