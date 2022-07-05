@@ -276,7 +276,7 @@ DONATION_FREQUENCY= [
 ]
 
 class Donor(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    # user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
@@ -284,11 +284,11 @@ class Donor(models.Model):
     location = models.CharField(max_length=30)
     country = models.CharField(choices=COUNTRIES, max_length=50)
     bio = models.TextField(max_length=700)
-    image = CloudinaryField('image', null=True)
+    image = CloudinaryField('image', default='https://res.cloudinary.com/dz275mqsc/image/upload/v1654858776/default_nbsolf.png')
     date_joined = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.user.username
+        return self.first_name + ' ' + self.last_name
 
 
 class Charity(models.Model):
