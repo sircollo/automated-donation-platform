@@ -63,3 +63,16 @@ class CharityDetails(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     
+class FeedbackList(APIView):
+    def get(self, request):
+        feedbacks = Feedback.objects.all()
+        serializer = FeedbackSerializer(feedbacks, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = FeedbackSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
