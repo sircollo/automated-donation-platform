@@ -276,7 +276,7 @@ DONATION_FREQUENCY= [
 ]
 
 class Donor(models.Model):
-    # user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
@@ -289,6 +289,12 @@ class Donor(models.Model):
 
     def __str__(self):
         return self.first_name + ' ' + self.last_name
+
+    def save_donor(self):
+        self.save()
+
+    def delete_donor(self):
+        self.delete()
 
 
 class Charity(models.Model):
