@@ -8,6 +8,10 @@ urlpatterns = [
     path('api/charities/', views.CharityList.as_view()),
     path('api/charities/<int:pk>/', views.CharityDetails.as_view()),
 
+    #donors API endpoints
+    path('api/donors/', views.DonorList.as_view()),
+    path('api/donors/<int:pk>/', views.DonorDetails.as_view()),
+
     #donations API endpoints
     path('api/donations/', views.DonationsList.as_view()),
     path('api/donations/<int:pk>/', views.DonationsDetails.as_view()),

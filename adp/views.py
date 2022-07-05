@@ -81,6 +81,51 @@ class CharityDetails(APIView):
         charity.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
+class DonorList(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request):
+        donors = Donor.objects.all()
+        serializer = DonorSerializer(donors, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = DonorSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DonorDetails(APIView):
+    permission_classes = (AllowAny,)
+
+    def get_object(self, pk):
+        try:
+            return Donor.objects.get(pk=pk)
+        except Donor.DoesNotExist:
+            raise Http404
+
+    #To get a particular donor
+    def get(self, request, pk, format=None):
+        donor = self.get_object(pk)
+        serializer = DonorSerializer(donor)
+        return Response(serializer.data)
+    #To update a particular donor
+    def put(self, request, pk, format=None):
+        donor = self.get_object(pk)
+        serializer = DonorSerializer(donor, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    #To delete a particular donor
+    def delete(self, request, pk, format=None):
+        donor = self.get_object(pk)
+        donor.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
     
 class FeedbackList(APIView):
     permission_classes = (AllowAny,)
