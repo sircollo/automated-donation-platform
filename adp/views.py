@@ -76,3 +76,43 @@ class FeedbackList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class DonationsList(APIView):
+    def get(self, request):
+        donations = Donations.objects.all()
+        serializer = DonationsSerializer(donations, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = DonationsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class DonationsDetails(APIView):
+    def get_object(self, pk):
+        try:
+            return Donations.objects.get(pk=pk)
+        except Donations.DoesNotExist:
+            raise Http404
+
+    #To get a particular donation
+    def get(self, request, pk, format=None):
+        donation = self.get_object(pk)
+        serializer = DonationsSerializer(donation)
+        return Response(serializer.data)
+
+    #To update a particular donation
+    def put(self, request, pk, format=None):
+        donation = self.get_object(pk)
+        serializer = DonationsSerializer(donation, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    #To delete a particular donation
+    def delete(self, request, pk, format=None):
+        donation = self.get_object(pk)
+        donation.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
