@@ -292,7 +292,6 @@ class Donor(models.Model):
     country = models.CharField(choices=COUNTRIES, max_length=50)
     bio = models.TextField(max_length=700)
     image = CloudinaryField('image', null=True)
-    # charity = models.ManyToManyField(Charity, on_delete=models.CASCADE,null=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
@@ -319,10 +318,9 @@ class Charity(models.Model):
 
 
 class Donations(models.Model):
-    donor_id = models.ForeignKey(Donor,on_delete=models.CASCADE )
+    donor_id = models.ManyToManyField(Donor,blank=True )
     amount_raised = models.IntegerField()
     date_donated = models.DateTimeField(auto_now_add=True)
-    type_of_donation = models.CharField(max_length=100)
     payment_method= models.CharField(default='Paypal',max_length=30)
     charity = models.ForeignKey(Charity, on_delete=models.CASCADE)
     donation_frequency = models.CharField(choices=DONATION_FREQUENCY,max_length=30)

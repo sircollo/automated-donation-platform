@@ -150,7 +150,7 @@ def charitybeneficiary_details(request, charity_id, beneficiary_id):
         beneficiary = Beneficiary.objects.get(id=beneficiary_id)
         charities = Charity.objects.get(id=charity_id) 
     except Beneficiary.DoesNotExist: 
-        return JsonResponse({'message': 'Not found'}, status=status.HTTP_404_NOT_FOUND) 
+        return Response({'message': 'Not found'}, status=status.HTTP_404_NOT_FOUND) 
  
     if request.method == 'GET': 
         beneficiary_serializer = BeneficiariesSerializer(beneficiary) 
@@ -159,8 +159,8 @@ def charitybeneficiary_details(request, charity_id, beneficiary_id):
         beneficiary_serializer = BeneficiariesSerializer(beneficiary, data=request.data) 
         if beneficiary_serializer.is_valid(): 
             beneficiary_serializer.save() 
-            return JsonResponse(beneficiary_serializer.data) 
-        return JsonResponse(beneficiary_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(beneficiary_serializer.data) 
+        return Response(beneficiary_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE': 
         beneficiary.delete() 
-        return JsonResponse({'message': 'Beneficiary deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'Beneficiary deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
