@@ -289,6 +289,11 @@ class Charity(models.Model):
     mission = models.CharField(max_length=100)
     status = models.BooleanField(default=None)
 
+    def __str__(self):
+        return self.name
+    
+    
+
 
 
 class Donor(models.Model):
@@ -303,6 +308,11 @@ class Donor(models.Model):
     image = CloudinaryField('image', null=True)
     charity = models.ForeignKey(Charity, on_delete=models.CASCADE)
     date_joined = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.username
+
+    
 
 
 

@@ -41,11 +41,13 @@ class CharityDetails(APIView):
         except Charity.DoesNotExist:
             raise Http404
 
+    #To get a particular charity
     def get(self, request, pk, format=None):
         charity = self.get_object(pk)
         serializer = CharitySerializer(charity)
         return Response(serializer.data)
 
+    #To update a particular charity
     def put(self, request, pk, format=None):
         charity = self.get_object(pk)
         serializer = CharitySerializer(charity, data=request.data)
@@ -54,7 +56,10 @@ class CharityDetails(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    #To delete a particular charity
     def delete(self, request, pk, format=None):
         charity = self.get_object(pk)
         charity.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    

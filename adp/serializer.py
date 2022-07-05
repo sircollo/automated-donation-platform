@@ -7,4 +7,18 @@ class CharitySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class DonorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Donor
+        fields = '__all__'
+
+class DonationsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Donations
+        fields = '__all__'
+
+class FeedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Feedback
+        fields = '__all__'
     
