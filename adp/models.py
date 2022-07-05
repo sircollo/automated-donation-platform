@@ -1,3 +1,4 @@
+from re import T
 from django.db import models
 from django.contrib.auth.models import User,AbstractUser
 from cloudinary.models import CloudinaryField
@@ -282,21 +283,30 @@ DONATION_FREQUENCY= [
     ('Monthly', ('Monthly')),
     ('Annualy', ('Annualy')),
 ]
+
+
 class Donor(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
-    phone_number = models.IntegerField(null=True)
+    phone_number = models.IntegerField()
     location = models.CharField(max_length=30)
     country = models.CharField(choices=COUNTRIES, max_length=50)
     bio = models.TextField(max_length=700)
-    image = CloudinaryField('image', null=True)
+    image = CloudinaryField('image', default='https://res.cloudinary.com/dz275mqsc/image/upload/v1654858776/default_nbsolf.png')
     date_joined = models.DateTimeField(auto_now_add=True)
-    
+
     def __str__(self):
-        return self.user.username
-    
+        return self.first_name + ' ' + self.last_name
+
+    def save_donor(self):
+        self.save()
+
+    def delete_donor(self):
+        self.delete()
+
+
 class Charity(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=60)
@@ -307,14 +317,24 @@ class Charity(models.Model):
     charity_image = CloudinaryField('charity_image', null=True)
     date_formed = models.DateTimeField(auto_now_add=True)
     date_joined = models.DateTimeField(auto_now_add=True)
-    target_amount = models.IntegerField(choices=TARGET_AMOUNT,null=True)
-    Deadline = models.DateTimeField(auto_now_add=True)
+    target_amount = models.IntegerField(choices=TARGET_AMOUNT)
+    deadline = models.DateTimeField(auto_now_add=True)
     mission = models.CharField(max_length=100)
-    status = models.BooleanField(default=None,null=True)
-    donor = models.ManyToManyField(Donor,blank=True)
-    
+    status = models.BooleanField(default=None)
+    donor = models.ManyToManyField(Donor, blank=True)
+
     def __str__(self):
         return self.name
+
+    def status_true(self):
+        self.status = True
+        self.save()
+        return self.status
+
+    def status_false(self):
+        self.status = False
+        self.save()
+        return self.status
 
 
 class Donations(models.Model):
@@ -329,12 +349,30 @@ class Donations(models.Model):
     def __str__(self):
         return self.charity.name
 
+    def __str__(self):
+        return self.charity.name
+
 class Feedback(models.Model):
     name = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
     phone_number = models.IntegerField()
     subject = models.CharField(max_length=100)
     message = models.TextField(max_length=500)
+
+
+    def __str__(self):
+        return self.name
+
+class Posts(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.TextField(max_length=500)
+    date_posted = models.DateTimeField(auto_now_add=True)
+    image = CloudinaryField('image', null=True)
+    charity = models.ForeignKey(Charity, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.charity.name
+
     
 class Beneficiary(models.Model):
     name = models.CharField(max_length=200)
@@ -347,3 +385,4 @@ class Beneficiary(models.Model):
     def __str__(self):
         return self.name
     
+

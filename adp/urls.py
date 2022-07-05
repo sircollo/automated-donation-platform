@@ -4,6 +4,31 @@ from .views import *
 
 urlpatterns = [
     path('', views.index, name='index'),
+
+
+    #charities API endpoints
+    path('api/charities/', views.CharityList.as_view()),
+    path('api/charities/<int:pk>/', views.CharityDetails.as_view()),
+
+    #donors API endpoints
+    path('api/donors/', views.DonorList.as_view()),
+    path('api/donors/<int:pk>/', views.DonorDetails.as_view()),
+
+    #donations API endpoints
+    path('api/donations/', views.DonationsList.as_view()),
+    path('api/donations/<int:pk>/', views.DonationsDetails.as_view()),
+
+    #feedback API endpoints
+    path('api/feedback/', views.FeedbackList.as_view()),
+    path('api/feedback/<int:pk>/', views.FeedbackDetails.as_view()),
+
+    #posts API endpoints
+    path('api/posts/', views.PostsList.as_view()),
+    path('api/posts/<int:pk>/', views.PostsDetails.as_view()),
+
+    #Charity Donations API endpoints
+    path('api/charities/<int:pk>/donations/', views.CharityDonationsList.as_view()),    
+
     path('signin/', GetTokenPairView.as_view(), name='token_obtain_pair'),
     path('signup/', RegisterDonorView.as_view(), name='signup'),
     path('signup-charity/', RegisterCharityView.as_view(), name='signup-charity'),
