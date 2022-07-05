@@ -4,6 +4,7 @@ from django.http.response import HttpResponse, Http404
 from .models import *
 from .serializer import *
 
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
@@ -14,6 +15,8 @@ def index(request):
     return HttpResponse('Welcome to Fundflow')
 
 class CharityList(APIView):
+    permission_classes = (AllowAny,)
+
     def get(self, request):
         charities = Charity.objects.all()
         serializer = CharitySerializer(charities, many=True)
@@ -64,6 +67,8 @@ class CharityDetails(APIView):
 
     
 class FeedbackList(APIView):
+    permission_classes = (AllowAny,)
+
     def get(self, request):
         feedbacks = Feedback.objects.all()
         serializer = FeedbackSerializer(feedbacks, many=True)
@@ -105,6 +110,8 @@ class FeedbackDetails(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class DonationsList(APIView):
+    permission_classes = (AllowAny,)
+
     def get(self, request):
         donations = Donations.objects.all()
         serializer = DonationsSerializer(donations, many=True)
@@ -147,6 +154,8 @@ class DonationsDetails(APIView):
 
 
 class PostsList(APIView):
+    permission_classes = (AllowAny,)
+
     def get(self, request):
         posts = Posts.objects.all()
         serializer = PostsSerializer(posts, many=True)
