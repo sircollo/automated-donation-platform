@@ -19,4 +19,8 @@ urlpatterns = [
     #posts API endpoints
     path('api/posts/', views.PostsList.as_view()),
     path('api/posts/<int:pk>/', views.PostsDetails.as_view()),
+
+    #Charity Donations API endpoints
+    path('api/charities/<int:pk>/donations/', views.CharityDonationsList.as_view()),    
+    
 ]

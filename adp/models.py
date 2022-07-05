@@ -305,22 +305,34 @@ class Charity(models.Model):
     deadline = models.DateTimeField(auto_now_add=True)
     mission = models.CharField(max_length=100)
     status = models.BooleanField(default=None)
-    donor = models.ManyToManyField(Donor, default=True)
+    donor = models.ManyToManyField(Donor, blank=True)
 
     def __str__(self):
         return self.name
+
+    def status_true(self):
+        self.status = True
+        self.save()
+        return self.status
+
+    def status_false(self):
+        self.status = False
+        self.save()
+        return self.status
     
 
 
 class Donations(models.Model):
-    donor_id = models.ForeignKey(Donor,on_delete=models.CASCADE )
+    donor_id = models.ManyToManyField(Donor, blank=True) # many to many relationship
     amount_raised = models.IntegerField()
     date_donated = models.DateTimeField(auto_now_add=True)
-    type_of_donation = models.CharField(max_length=100)
     payment_method= models.CharField(default='Paypal', max_length=20)
     charity = models.ForeignKey(Charity, on_delete=models.CASCADE)
     donation_frequency = models.CharField(choices=DONATION_FREQUENCY, max_length=20)
     comment = models.TextField()
+
+    def __str__(self):
+        return self.charity.name
 
 class Feedback(models.Model):
     name = models.CharField(max_length=50)
@@ -340,7 +352,7 @@ class Posts(models.Model):
     charity = models.ForeignKey(Charity, on_delete=models.CASCADE)
     
     def __str__(self):
-        return self.title
+        return self.charity.name
 # Image-
 # Title-
 # Details-

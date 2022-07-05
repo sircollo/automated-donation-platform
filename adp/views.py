@@ -37,7 +37,23 @@ class CharityList(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+# class CharityView(APIView):
+#     permission_classes = (AllowAny,)
+#     def get(self, request):
+#         charities = Charity.objects.all()
+#         serializer = CharitySerializer(charities, many=True)
+#         return Response(serializer.data)
+#     def post(self, request):
+#         serializer = CharitySerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class CharityDetails(APIView):
+    permission_classes = (AllowAny,)
+
     def get_object(self, pk):
         try:
             return Charity.objects.get(pk=pk)
@@ -82,6 +98,8 @@ class FeedbackList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class FeedbackDetails(APIView):
+    permission_classes = (AllowAny,)
+    
     def get_object(self, pk):
         try:
             return Feedback.objects.get(pk=pk)
@@ -125,6 +143,9 @@ class DonationsList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class DonationsDetails(APIView):
+    permission_classes = (AllowAny,)
+
+    #To update a particular donations
     def get_object(self, pk):
         try:
             return Donations.objects.get(pk=pk)
@@ -152,6 +173,24 @@ class DonationsDetails(APIView):
         donation.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+class CharityDonationsList(APIView):
+    permission_classes = (AllowAny,)
+
+    def get_object(self, pk):
+        try:
+            charity = Charity.objects.get(pk=pk)
+            donation = Donations.objects.filter(charity=charity)
+            print(donation)
+        except Donations.DoesNotExist:
+            raise Http404
+
+    #To get a particular charity donations
+    def get(self, request, pk, format=None):
+        charity = Charity.objects.get(pk=pk)
+        donation = Donations.objects.filter(charity=charity)
+        serializer = DonationsSerializer(donation)
+        return Response(serializer.data)
+
 
 class PostsList(APIView):
     permission_classes = (AllowAny,)
@@ -169,6 +208,8 @@ class PostsList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class PostsDetails(APIView):
+    permission_classes = (AllowAny,)
+
     def get_object(self, pk):
         try:
             return Posts.objects.get(pk=pk)
