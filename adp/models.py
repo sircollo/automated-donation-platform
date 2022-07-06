@@ -290,7 +290,7 @@ class Donor(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
-    phone_number = models.IntegerField()
+    phone_number = models.IntegerField(null=True)
     location = models.CharField(max_length=30)
     country = models.CharField(choices=COUNTRIES, max_length=50)
     bio = models.TextField(max_length=700)
@@ -317,10 +317,10 @@ class Charity(models.Model):
     charity_image = CloudinaryField('charity_image', null=True)
     date_formed = models.DateTimeField(auto_now_add=True)
     date_joined = models.DateTimeField(auto_now_add=True)
-    target_amount = models.IntegerField(choices=TARGET_AMOUNT)
+    target_amount = models.IntegerField(choices=TARGET_AMOUNT,null=True)
     deadline = models.DateTimeField(auto_now_add=True)
     mission = models.CharField(max_length=100)
-    status = models.BooleanField(default=None)
+    status = models.BooleanField(default=None,null=True)
     donor = models.ManyToManyField(Donor, blank=True)
 
     def __str__(self):
