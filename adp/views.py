@@ -16,10 +16,12 @@ from .models import *
 from .serializer import *
 
 from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-
+from rest_framework.decorators import api_view, permission_classes
+from django.http import HttpResponseForbidden
 # Create your views here.
 
 def index(request):
@@ -356,14 +358,15 @@ def donor_details(request, donor_id):
 
 #beneficiaries list 
 @api_view(['GET','DELETE','POST'])
+@permission_classes((AllowAny,))
 def beneficiaries_list(request):
     if request.method == 'GET':
         beneficiaries = Beneficiary.objects.all()
         beneficiaries_serializer = BeneficiariesSerializer(beneficiaries, many=True,context={'request': request})
         return Response(beneficiaries_serializer.data)
     elif request.method == 'POST':
-        beneficiaries_data = JSONParser().parse(request)
-        beneficiaries_serializer = BeneficiariesSerializer(data=beneficiaries_data)
+        # beneficiaries_data = JSONParser().parse(request)
+        beneficiaries_serializer = BeneficiariesSerializer(data=request.data)
         if beneficiaries_serializer.is_valid():
             beneficiaries_serializer.save()
             return Response(beneficiaries_serializer.data, status=status.HTTP_201_CREATED) 
@@ -374,6 +377,7 @@ def beneficiaries_list(request):
     
 # single beneficiary view   
 @api_view(['GET', 'PUT','DELETE','POST'])
+@permission_classes((IsAuthenticated,))
 def beneficiary_details(request, beneficiary_id):
     try: 
         beneficiary = Beneficiary.objects.get(id=beneficiary_id) 
@@ -398,6 +402,7 @@ def beneficiary_details(request, beneficiary_id):
 
 # each charity beneficiary list  
 @api_view(['GET', 'PUT','DELETE','POST'])
+@permission_classes((AllowAny,))
 def charitybeneficiaries_list(request, charity_id):
     try:
         charities = Charity.objects.get(id=charity_id)
@@ -421,6 +426,7 @@ def charitybeneficiaries_list(request, charity_id):
 
 # single charity beneficiary view   
 @api_view(['GET', 'PUT','DELETE','POST'])
+@permission_classes((AllowAny,))
 def charitybeneficiary_details(request, charity_id, beneficiary_id):
     try: 
         beneficiary = Beneficiary.objects.get(id=beneficiary_id)
@@ -435,9 +441,43 @@ def charitybeneficiary_details(request, charity_id, beneficiary_id):
         beneficiary_serializer = BeneficiariesSerializer(beneficiary, data=request.data) 
         if beneficiary_serializer.is_valid(): 
             beneficiary_serializer.save() 
-            return Response(beneficiary_serializer.data) 
-        return Response(beneficiary_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse(beneficiary_serializer.data, status=status.HTTP_200_OK) 
+        return JsonResponse(beneficiary_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE': 
         beneficiary.delete() 
         return Response({'message': 'Beneficiary deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
 
+
+# each charity's donations view
+@api_view(['GET'])
+@permission_classes((AllowAny,))
+def CharitiesDonationsList(request, charity_id):
+    try:
+        charities = Charity.objects.get(id=charity_id)
+        donations = Donations.objects.filter(charity=charities)
+    except:
+        if Donations.DoesNotExist:
+            return Response({'message': 'No Donations for Charity {}'.format(charity_id)}, status=status.HTTP_404_NOT_FOUND)
+        elif Charity.DoesNotExist: 
+            return Response({'message': 'Charity Not found'}, status=status.HTTP_404_NOT_FOUND)   
+    if request.method == 'GET': 
+        donations_serializer = DonationsSerializer(donations, many=True) 
+        return Response(donations_serializer.data) 
+    
+# each charity's single donation view
+@api_view(['GET'])
+# @permission_classes((AllowAny,))
+@permission_classes((IsAuthenticated,))
+def CharitiesDonationsdetails(request, charity_id, donation_id):
+    try: 
+        charities = Charity.objects.get(id=charity_id)
+        donation = Donations.objects.get(charity=charities) 
+        donation = Donations.objects.get(id=donation_id)        
+    except: 
+        if Donations.DoesNotExist:
+            return Response({'message': 'Donation Not found'}, status=status.HTTP_404_NOT_FOUND)
+        elif Charity.DoesNotExist: 
+            return Response({'message': 'Charity Not found'}, status=status.HTTP_404_NOT_FOUND) 
+    if request.method == 'GET': 
+        donation_serializer = DonationsSerializer(donation) 
+        return Response(donation_serializer.data) 
