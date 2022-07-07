@@ -1,3 +1,4 @@
+from dataclasses import field
 from readline import get_current_history_length
 from django.contrib.auth.models import User
 from rest_framework import serializers
@@ -136,4 +137,10 @@ class BeneficiariesSerializer(serializers.ModelSerializer):
         model = Beneficiary
         # fields = '__all__'
         fields = ('id', 'name', 'contact', 'location','country','donation_received')
+        
+        
+class AnonymousDonationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AnonymousDonation
+        fields = '__all__'
         

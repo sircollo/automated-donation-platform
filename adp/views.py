@@ -481,3 +481,34 @@ def CharitiesDonationsdetails(request, charity_id, donation_id):
     if request.method == 'GET': 
         donation_serializer = DonationsSerializer(donation) 
         return Response(donation_serializer.data) 
+    
+@api_view(['GET','POST','DELETE'])
+@permission_classes((AllowAny,))
+def anonnymous_donation(request):
+    if request.method == 'GET':
+        annonymous_donations = AnonymousDonation.objects.all()
+        annonymous_serializer = AnonymousDonationSerializer(annonymous_donations, many=True,context={'request': request})
+        return Response(annonymous_serializer.data)
+    
+    elif request.method == 'POST':
+        # annonymous_data = JSONParser().parse(request)
+        annonymous_serializer = AnonymousDonationSerializer(data=request.data)
+        if annonymous_serializer.is_valid():
+            annonymous_serializer.save()
+            return Response(annonymous_serializer.data, status=status.HTTP_201_CREATED) 
+        return Response(annonymous_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+# each charity anonymous donations list  
+@api_view(['GET', 'PUT','DELETE','POST'])
+@permission_classes((AllowAny,))
+def anonnymous_donation_list(request, charity_id):
+    try: 
+        charity = Charity.objects.get(id=charity_id)
+        anonnymous_donations = AnonymousDonation.objects.filter(charity=charity) 
+    except AnonymousDonation.DoesNotExist: 
+        return Response({'message': 'Not found'}, status=status.HTTP_404_NOT_FOUND) 
+ 
+    if request.method == 'GET': 
+        beneficiary_serializer = AnonymousDonationSerializer(anonnymous_donations, many=True) 
+        return Response(beneficiary_serializer.data)

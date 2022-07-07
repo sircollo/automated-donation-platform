@@ -44,6 +44,11 @@ urlpatterns = [
     url(r'charity/(?P<charity_id>\d+)/beneficiaries/$', views.charitybeneficiaries_list),
     url(r'charity/(?P<charity_id>\d+)/beneficiary/(?P<beneficiary_id>\d+)/$', views.charitybeneficiary_details),
     
+    # all anonymous donations view
+    url(r'api/anon/$', views.anonnymous_donation),
+    # charity's anonymous donations
+    url(r'api/charity/(?P<charity_id>\d+)/anon_donations/$', views.anonnymous_donation_list),
+    
 ]
 
 # API URLS

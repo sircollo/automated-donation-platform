@@ -385,4 +385,12 @@ class Beneficiary(models.Model):
     def __str__(self):
         return self.name
     
+class AnonymousDonation(models.Model):
+    donation_amount = models.IntegerField()
+    comment = models.TextField(blank=True,null=True)
+    charity = models.ForeignKey(Charity, on_delete=models.CASCADE)
+    payment_method= models.CharField(default='Paypal',max_length=30)
+    
+    def __str__(self):
+        return self.charity.name
 
