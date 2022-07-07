@@ -141,13 +141,13 @@ class DonorDetails(APIView):
 
     
 class FeedbackList(APIView):
-    permission_classes = (AllowAny,)
-
     def get(self, request):
         feedbacks = Feedback.objects.all()
         serializer = FeedbackSerializer(feedbacks, many=True)
         return Response(serializer.data)
-
+    
+    permission_classes = []
+    authentication_classes = []
     def post(self, request):
         serializer = FeedbackSerializer(data=request.data)
         if serializer.is_valid():
