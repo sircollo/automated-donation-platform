@@ -201,11 +201,6 @@ AUTH_USER_MODEL = 'adp.User'
 #   api_key = config('CLOUD_API_KEY'), 
 #   api_secret = config('CLOUD_API_SECRET') 
 # )
-cloudinary.config( 
-  cloud_name = "dtqnkzj6q", 
-  api_key = "897699858178261", 
-  api_secret = "NsUxBmUCiYvEfB6GnQi8_WqSipU" 
-)
 
 MESSAGE_TAGS={
     messages.DEBUG: 'alert-secondary',
