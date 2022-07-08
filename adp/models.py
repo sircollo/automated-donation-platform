@@ -1,7 +1,16 @@
-from re import T
 from django.db import models
+from django.contrib.auth.models import User,AbstractUser
 from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import User
+
+# Create your models here.
+
+class User(AbstractUser):
+  is_charity = models.BooleanField(default=False)
+  is_donor = models.BooleanField(default=False)
+  is_superuser = models.BooleanField(default=False)
+  is_staff = models.BooleanField(default=False)
+
 
 # Create your models here.
 
@@ -275,12 +284,13 @@ DONATION_FREQUENCY= [
     ('Annualy', ('Annualy')),
 ]
 
+
 class Donor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
-    phone_number = models.IntegerField()
+    phone_number = models.IntegerField(null=True)
     location = models.CharField(max_length=30)
     country = models.CharField(choices=COUNTRIES, max_length=50)
     bio = models.TextField(max_length=700)
@@ -307,10 +317,10 @@ class Charity(models.Model):
     charity_image = CloudinaryField('charity_image', null=True)
     date_formed = models.DateTimeField(auto_now_add=True)
     date_joined = models.DateTimeField(auto_now_add=True)
-    target_amount = models.IntegerField(choices=TARGET_AMOUNT)
+    target_amount = models.IntegerField(choices=TARGET_AMOUNT,null=True)
     deadline = models.DateTimeField(auto_now_add=True)
     mission = models.CharField(max_length=100)
-    status = models.BooleanField(default=None)
+    status = models.BooleanField(default=None,null=True)
     donor = models.ManyToManyField(Donor, blank=True)
 
     def __str__(self):
@@ -325,17 +335,19 @@ class Charity(models.Model):
         self.status = False
         self.save()
         return self.status
-    
 
 
 class Donations(models.Model):
-    donor_id = models.ManyToManyField(Donor, blank=True) # many to many relationship
+    donor_id = models.ManyToManyField(Donor,blank=True )
     amount_raised = models.IntegerField()
     date_donated = models.DateTimeField(auto_now_add=True)
-    payment_method= models.CharField(default='Paypal', max_length=20)
+    payment_method= models.CharField(default='Paypal',max_length=30)
     charity = models.ForeignKey(Charity, on_delete=models.CASCADE)
-    donation_frequency = models.CharField(choices=DONATION_FREQUENCY, max_length=20)
+    donation_frequency = models.CharField(choices=DONATION_FREQUENCY,max_length=30)
     comment = models.TextField()
+    
+    def __str__(self):
+        return self.charity.name
 
     def __str__(self):
         return self.charity.name
@@ -346,6 +358,7 @@ class Feedback(models.Model):
     phone_number = models.IntegerField()
     subject = models.CharField(max_length=100)
     message = models.TextField(max_length=500)
+
 
     def __str__(self):
         return self.name
@@ -359,10 +372,25 @@ class Posts(models.Model):
     
     def __str__(self):
         return self.charity.name
-# Image-
-# Title-
-# Details-
-# Date_posted-
-# Charity_id
 
+    
+class Beneficiary(models.Model):
+    name = models.CharField(max_length=200)
+    charity = models.ForeignKey(Charity, on_delete=models.CASCADE)
+    contact= models.CharField(max_length=50)
+    location = models.CharField(max_length=50)
+    country = models.CharField(choices=COUNTRIES, max_length=50)
+    donation_received = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.name
+    
+class AnonymousDonation(models.Model):
+    donation_amount = models.IntegerField()
+    comment = models.TextField(blank=True,null=True)
+    charity = models.ForeignKey(Charity, on_delete=models.CASCADE)
+    payment_method= models.CharField(default='Paypal',max_length=30)
+    
+    def __str__(self):
+        return self.charity.name
 
