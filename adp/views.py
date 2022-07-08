@@ -9,6 +9,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
 # Create your views here.
 
 def index(request):
@@ -37,19 +40,6 @@ class CharityList(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-# class CharityView(APIView):
-#     permission_classes = (AllowAny,)
-#     def get(self, request):
-#         charities = Charity.objects.all()
-#         serializer = CharitySerializer(charities, many=True)
-#         return Response(serializer.data)
-#     def post(self, request):
-#         serializer = CharitySerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CharityDetails(APIView):
     permission_classes = (AllowAny,)
@@ -218,24 +208,6 @@ class DonationsDetails(APIView):
         donation.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class CharityDonationsList(APIView):
-    permission_classes = (AllowAny,)
-
-    def get_object(self, pk):
-        try:
-            charity = Charity.objects.get(pk=pk)
-            donation = Donations.objects.filter(charity=charity)
-            print(donation)
-        except Donations.DoesNotExist:
-            raise Http404
-
-    #To get a particular charity donations
-    def get(self, request, pk, format=None):
-        charity = Charity.objects.get(pk=pk)
-        donation = Donations.objects.filter(charity=charity)
-        serializer = DonationsSerializer(donation)
-        return Response(serializer.data)
-
 
 class PostsList(APIView):
     permission_classes = (AllowAny,)
@@ -281,3 +253,53 @@ class PostsDetails(APIView):
         post = self.get_object(pk)
         post.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# class CharityView(APIView):
+#     permission_classes = (AllowAny,)
+#     def get(self, request):
+#         charities = Charity.objects.all()
+#         serializer = CharitySerializer(charities, many=True)
+#         return Response(serializer.data)
+
+#     def post(self, request):
+#         serializer = CharitySerializer(self.object, data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         return Response(serializer.validated_data)
+
+#     def put(self, request, pk):
+#         charity = self.get_object(pk)
+#         serializer = CharitySerializer(charity, data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.validated_data)
+
+#     def delete(self, request, pk):
+#         charity = self.get_object(pk)
+#         charity.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
+
+# @api_view(['GET', 'POST', 'PUT', 'DELETE'])
+# @permission_classes([IsAuthenticated])
+
+# def charity_view(request):
+#     if request.method == 'GET':
+#         charities = Charity.objects.all()
+#         serializer = CharitySerializer(charities, many=True)
+#         return Response(serializer.data)
+#     elif request.method == 'POST':
+#         serializer = CharitySerializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
+#     elif request.method == 'PUT':
+#         charity = Charity.objects.get(pk=request.data['id'])
+#         serializer = CharitySerializer(charity, data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data)
+#     elif request.method == 'DELETE':
+#         charity = Charity.objects.get(pk=request.data['id'])
+#         charity.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
+    
