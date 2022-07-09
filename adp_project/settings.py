@@ -17,6 +17,7 @@ from django.contrib.messages import constants as messages
 import cloudinary, cloudinary.uploader, cloudinary.api
 import django_heroku,dj_database_url
 from decouple import config,Csv
+import datetime
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -128,12 +129,16 @@ DATABASES = {
 #configurations for the API
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': ( 
         'rest_framework.permissions.AllowAny',
-        'rest_framework.permissions.IsAuthenticated'),
+        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        ),
     
          
 }
@@ -214,5 +219,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://funds-flow.herokuapp.com"
 
 ]
-
+CORS_ORIGIN_ALLOW_ALL = True
 django_heroku.settings(locals())
+
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+    'JWT_ALLOW_REFRESH': True,
+}

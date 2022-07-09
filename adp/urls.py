@@ -2,6 +2,11 @@ from django.urls import path,re_path as url
 from . import views
 from .views import *
 
+
+from rest_framework_jwt.views import (obtain_jwt_token,
+                                        verify_jwt_token,
+                                        refresh_jwt_token)
+
 urlpatterns = [
     path('', views.index, name='index'),
 
@@ -49,6 +54,13 @@ urlpatterns = [
     # charity's anonymous donations
     url(r'api/charity/(?P<charity_id>\d+)/anon_donations/$', views.anonnymous_donation_list),
     
+    url(r'^login', views.LoginUser.as_view()),
+    url(r'^token_auth', obtain_jwt_token),
+    url(r'^token_refresh', refresh_jwt_token),
+    url(r'^token_verify', verify_jwt_token),
+    # url(r'^register', views.CreateUser.as_view()),
+
+
 ]
 
 # API URLS
@@ -56,6 +68,9 @@ urlpatterns = [
 # signup-donor - http://127.0.0.1:8000/signup/
 # signup-charity - http://127.0.0.1:8000/signup-charity/
 # signup-admin - http://127.0.0.1:8000/signup-admin/
+
+# all users
+
 
 # Donors
 # Donors list - http://127.0.0.1:8000/donors/

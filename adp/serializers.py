@@ -144,3 +144,22 @@ class AnonymousDonationSerializer(serializers.ModelSerializer):
         model = AnonymousDonation
         fields = '__all__'
         
+        
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'password', 'email')
+
+    def create(self, validated_data):
+        user = User(
+            username=validated_data['username']
+        )
+        if 'email' in validated_data:
+            user.email=validated_data['email']
+        user.set_password(validated_data['password'])
+        user.is_active = True
+        user.is_donor = True
+        user.save()
+        return user
+    
