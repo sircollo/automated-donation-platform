@@ -1,3 +1,4 @@
+from tabnanny import verbose
 from django.db import models
 from django.contrib.auth.models import User,AbstractUser
 from cloudinary.models import CloudinaryField
@@ -306,6 +307,9 @@ class Donor(models.Model):
     def delete_donor(self):
         self.delete()
 
+    class Meta:
+        verbose_name_plural = 'Donors'
+
 
 class Charity(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -337,6 +341,9 @@ class Charity(models.Model):
         self.save()
         return self.status
 
+    class Meta:
+        verbose_name_plural = 'Charities'
+
 
 class Donations(models.Model):
     donor_id = models.ManyToManyField(Donor,blank=True )
@@ -353,6 +360,9 @@ class Donations(models.Model):
     def __str__(self):
         return self.charity.name
 
+    class Meta:
+        verbose_name_plural = 'Donations'
+
 class Feedback(models.Model):
     name = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
@@ -364,6 +374,9 @@ class Feedback(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name_plural = 'Feedback'
+
 class Posts(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField(max_length=500)
@@ -373,6 +386,9 @@ class Posts(models.Model):
     
     def __str__(self):
         return self.charity.name
+
+    class Meta:
+        verbose_name_plural = 'Posts'
 
     
 class Beneficiary(models.Model):
@@ -385,6 +401,9 @@ class Beneficiary(models.Model):
     
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name_plural = 'Beneficiaries'
     
 class AnonymousDonation(models.Model):
     donation_amount = models.IntegerField()
@@ -394,4 +413,7 @@ class AnonymousDonation(models.Model):
     
     def __str__(self):
         return self.charity.name
+
+    class Meta:
+        verbose_name_plural = 'Anonymous Donations'
 
