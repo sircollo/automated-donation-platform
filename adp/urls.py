@@ -6,6 +6,11 @@ urlpatterns = [
     path('', views.index, name='index'),
 
 
+
+    #Users API endpoints
+    path('users/', views.UserList.as_view(), name='user-list'),
+    path('users/<int:pk>/', views.UserDetail.as_view(), name='user-detail'),
+    
     #charities API endpoints
     path('api/charities/', views.CharityList.as_view()),
     path('api/charities/<int:pk>/', views.CharityDetails.as_view()),

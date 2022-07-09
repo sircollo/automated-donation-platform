@@ -27,6 +27,18 @@ from django.http import HttpResponseForbidden
 def index(request):
     return HttpResponse('Welcome to Fundflow')
 
+
+
+class UserList(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
+
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
+
 class CharityList(APIView):
     permission_classes = (AllowAny,)
 
