@@ -198,13 +198,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # configurations for default user authentication model
-AUTH_USER_MODEL = 'adp.User'
 
-cloudinary.config( 
-  cloud_name = config('CLOUD_NAME'), 
-  api_key = config('CLOUD_API_KEY'), 
-  api_secret = config('CLOUD_API_SECRET') 
-)
+
+
 
 MESSAGE_TAGS={
     messages.DEBUG: 'alert-secondary',
@@ -225,3 +221,4 @@ JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
     'JWT_ALLOW_REFRESH': True,
 }
+AUTH_USER_MODEL = 'adp.User'

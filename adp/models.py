@@ -1,8 +1,9 @@
 from tabnanny import verbose
 from django.db import models
-from django.contrib.auth.models import User,AbstractUser
+from django.contrib.auth.models import AbstractUser
 from cloudinary.models import CloudinaryField
-from django.contrib.auth.models import User
+from django.conf import settings
+User= settings.AUTH_USER_MODEL
 
 # Create your models here.
 

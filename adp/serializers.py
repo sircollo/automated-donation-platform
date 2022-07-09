@@ -6,6 +6,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.validators import UniqueValidator 
 from django.contrib.auth.password_validation import validate_password
 from .models import *
+from .models import AbstractUser
 
 
 # get user token
@@ -145,21 +146,4 @@ class AnonymousDonationSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
         
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('username', 'password', 'email')
-
-    def create(self, validated_data):
-        user = User(
-            username=validated_data['username']
-        )
-        if 'email' in validated_data:
-            user.email=validated_data['email']
-        user.set_password(validated_data['password'])
-        user.is_active = True
-        user.is_donor = True
-        user.save()
-        return user
     
