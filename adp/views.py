@@ -56,7 +56,15 @@ class CharityDetails(APIView):
 
     def get_object(self, pk):
         try:
-            return Charity.objects.get(pk=pk)
+            charity= Charity.objects.get(pk=pk)
+            total_donations = 0
+            all_donations= Donations.objects.filter(charity=charity)
+            for donation in all_donations:
+                total_donations += donation.amount_raised
+
+            charity.current_amount = total_donations
+            charity.save()
+            return charity
         except Charity.DoesNotExist:
             raise Http404
 
