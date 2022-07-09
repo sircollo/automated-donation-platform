@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
-from decouple import config 
 from django.contrib.messages import constants as messages
 import cloudinary, cloudinary.uploader, cloudinary.api
 import django_heroku,dj_database_url
@@ -27,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ov93us6gvs5w^s3y1lew6--d%_7uo0(jb7+jyhy4v9!7iyu=#h'
+# SECRET_KEY = 'django-insecure-ov93us6gvs5w^s3y1lew6--d%_7uo0(jb7+jyhy4v9!7iyu=#h'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -116,15 +115,15 @@ WSGI_APPLICATION = 'adp_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST' : config('DB_HOST'),
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': config('DB_NAME'),
+#         'USER': config('DB_USER'),
+#         'PASSWORD': config('DB_PASSWORD'),
+#         'HOST' : config('DB_HOST'),
+#     }
+# }
 
 #configurations for the API
 REST_FRAMEWORK = {
@@ -201,11 +200,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # configurations for default user authentication model
 AUTH_USER_MODEL = 'adp.User'
 
-# cloudinary.config( 
-#   cloud_name = config('CLOUD_NAME'), 
-#   api_key = config('CLOUD_API_KEY'), 
-#   api_secret = config('CLOUD_API_SECRET') 
-# )
+cloudinary.config( 
+  cloud_name = config('CLOUD_NAME'), 
+  api_key = config('CLOUD_API_KEY'), 
+  api_secret = config('CLOUD_API_SECRET') 
+)
 
 MESSAGE_TAGS={
     messages.DEBUG: 'alert-secondary',

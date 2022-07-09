@@ -6,7 +6,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework import generics
 # donor serializer dependencies
 import requests
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,permission_classes
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser 
 from rest_framework.response import Response
@@ -15,13 +15,22 @@ from rest_framework import status
 from .models import *
 from .serializer import *
 
-from rest_framework.permissions import AllowAny
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
-from django.http import HttpResponseForbidden
+from django.contrib.auth.models import User, Group
+from django.contrib.auth import authenticate
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authtoken.models import Token
+from rest_framework.generics import CreateAPIView
+from rest_framework_jwt.settings import api_settings
+import jwt
+import json
+
+from .serializers import UserSerializer
+from adp_project.settings import SECRET_KEY
+
+jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER  
 # Create your views here.
 
 def index(request):
@@ -51,25 +60,20 @@ class CharityList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# class CharityView(APIView):
-#     permission_classes = (AllowAny,)
-#     def get(self, request):
-#         charities = Charity.objects.all()
-#         serializer = CharitySerializer(charities, many=True)
-#         return Response(serializer.data)
-#     def post(self, request):
-#         serializer = CharitySerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 class CharityDetails(APIView):
     permission_classes = (AllowAny,)
 
     def get_object(self, pk):
         try:
-            return Charity.objects.get(pk=pk)
+            charity= Charity.objects.get(pk=pk)
+            total_donations = 0
+            all_donations= Donations.objects.filter(charity=charity)
+            for donation in all_donations:
+                total_donations += donation.amount_raised
+
+            charity.current_amount = total_donations
+            charity.save()
+            return charity
         except Charity.DoesNotExist:
             raise Http404
 
@@ -230,24 +234,6 @@ class DonationsDetails(APIView):
         donation = self.get_object(pk)
         donation.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-class CharityDonationsList(APIView):
-    permission_classes = (AllowAny,)
-
-    def get_object(self, pk):
-        try:
-            charity = Charity.objects.get(pk=pk)
-            donation = Donations.objects.filter(charity=charity)
-            print(donation)
-        except Donations.DoesNotExist:
-            raise Http404
-
-    #To get a particular charity donations
-    def get(self, request, pk, format=None):
-        charity = Charity.objects.get(pk=pk)
-        donation = Donations.objects.filter(charity=charity)
-        serializer = DonationsSerializer(donation)
-        return Response(serializer.data)
 
 
 class PostsList(APIView):
@@ -514,28 +500,7 @@ def anonnymous_donation_list(request, charity_id):
         return Response(beneficiary_serializer.data)
     
 # ////////////////////
-from django.shortcuts import render, HttpResponse
-from django.contrib.auth.models import User, Group
-from django.contrib.auth import authenticate
-
-from rest_framework import viewsets
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.authtoken.models import Token
-from rest_framework import status
-from rest_framework.generics import CreateAPIView
-from rest_framework.response import Response
-from rest_framework_jwt.settings import api_settings
-import jwt
-import json
-
-from .serializers import UserSerializer
-from adp_project.settings import SECRET_KEY
-
-jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
-jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER   
+ 
 # another try
 class CreateUser(CreateAPIView):
     serializer_class = UserSerializer

@@ -1,8 +1,8 @@
-from re import T
 from django.db import models
 from django.contrib.auth.models import User,AbstractUser
 from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import User
+
 # Create your models here.
 
 class User(AbstractUser):
@@ -318,6 +318,7 @@ class Charity(models.Model):
     date_formed = models.DateTimeField(auto_now_add=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     target_amount = models.IntegerField(choices=TARGET_AMOUNT,null=True)
+    current_amount = models.PositiveIntegerField(default=0, blank=True)
     deadline = models.DateTimeField(auto_now_add=True)
     mission = models.CharField(max_length=100)
     status = models.BooleanField(default=None,null=True)
