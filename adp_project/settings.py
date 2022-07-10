@@ -198,7 +198,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # configurations for default user authentication model
-
+cloudinary.config( 
+  cloud_name = "dtqnkzj6q", 
+  api_key = "897699858178261", 
+  api_secret = "NsUxBmUCiYvEfB6GnQi8_WqSipU",
+)
 
 
 

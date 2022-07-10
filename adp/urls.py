@@ -11,6 +11,11 @@ urlpatterns = [
     path('', views.index, name='index'),
 
 
+
+    #Users API endpoints
+    path('users/', views.UserList.as_view(), name='user-list'),
+    path('users/<int:pk>/', views.UserDetail.as_view(), name='user-detail'),
+    
     #charities API endpoints
     path('api/charities/', views.CharityList.as_view()),
     path('api/charities/<int:pk>/', views.CharityDetails.as_view()),
@@ -59,6 +64,8 @@ urlpatterns = [
     url(r'^token_refresh', refresh_jwt_token),
     url(r'^token_verify', verify_jwt_token),
     # url(r'^register', views.CreateUser.as_view()),
+    
+    # url(r'^user',views.GetUser),
 
 
 ]

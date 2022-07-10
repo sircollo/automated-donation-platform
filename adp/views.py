@@ -33,6 +33,23 @@ jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 def index(request):
     return HttpResponse('Welcome to Fundflow')
 
+
+
+class UserList(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
+
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
+    
+    def get(self, request,pk):
+        user = User.objects.filter(id=pk).first()
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+
 class CharityList(APIView):
     permission_classes = (AllowAny,)
 
@@ -507,7 +524,10 @@ class LoginUser(APIView):
         user = authenticate(username=username, password=password)
         if user:
             payload = jwt_payload_handler(user) 
+            # payl = UserSerializer(payload)
+            # print(payl)
             return Response({
+                'id':user.id,
                 'response_code':'success',
                 'response_msg':'Login successfull',
                 'username':user.username,
@@ -518,4 +538,3 @@ class LoginUser(APIView):
               {'response_code':'error',
                 'response_msg':'Invalid credentials'},status.HTTP_400_BAD_REQUEST
             )
-
