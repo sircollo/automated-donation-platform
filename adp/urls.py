@@ -95,3 +95,6 @@ urlpatterns = [
 # Administrator - endpoints
 # all charities - http://127.0.0.1:8000/api/charities/ - receive application
 # each charity  - http://127.0.0.1:8000/api/charities/<int:pk>/ 'Approve', 'Delete',
+
+# post donations
+#  http://127.0.0.1:8000/api/donations/

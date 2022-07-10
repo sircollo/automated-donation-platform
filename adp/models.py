@@ -347,7 +347,11 @@ class Charity(models.Model):
 
 
 class Donations(models.Model):
-    donor_id = models.ManyToManyField(Donor,blank=True )
+    donor_id = models.ManyToManyField(Donor,blank=True)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    email = models.CharField(max_length=50)
+    phone_number = models.IntegerField(null=True)
     amount_raised = models.IntegerField()
     date_donated = models.DateTimeField(auto_now_add=True)
     payment_method= models.CharField(default='Paypal',max_length=30)
