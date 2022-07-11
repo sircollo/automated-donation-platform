@@ -1,3 +1,4 @@
+import re
 from django.shortcuts import render, redirect
 from django.http.response import HttpResponse, Http404
 from .serializers import *
@@ -32,7 +33,6 @@ jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
 def index(request):
     return HttpResponse('Welcome to Fundflow')
-
 
 
 class UserList(generics.ListCreateAPIView):
@@ -538,3 +538,25 @@ class LoginUser(APIView):
               {'response_code':'error',
                 'response_msg':'Invalid credentials'},status.HTTP_400_BAD_REQUEST
             )
+
+import io
+from rest_framework.renderers import JSONRenderer
+@api_view(['PUT'])
+def post_request(request):
+    if request.method == 'PUT':
+        json_data = request.body
+        stream = io.BytesIO(json_data)
+        python_data = JSONParser().parse(stream)
+        id = python_data.get('id', None)        
+        if id is not None:
+            user = User.objects.get(id=id)
+            charity = Charity.objects.get(user=user)
+            serializer = CharityPostSerializer(charity, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                res = {'msg':'Updated Successfully'}
+                json_data = JSONRenderer().render(res)
+                return Response(json_data, content_type='application/json')
+            res = {'msg':'Invalid'}
+            json_data = JSONRenderer().render(res)
+            return JsonResponse(json_data, content_type='application/json')
