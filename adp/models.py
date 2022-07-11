@@ -330,7 +330,7 @@ class Charity(models.Model):
     donor = models.ManyToManyField(Donor, blank=True)
 
     def __str__(self):
-        return self.name
+        return self.charity_name
 
     def status_true(self):
         self.status = True
