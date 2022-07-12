@@ -59,8 +59,11 @@ urlpatterns = [
     # charity's anonymous donations
     url(r'api/charity/(?P<charity_id>\d+)/anon_donations/$', views.anonnymous_donation_list),
     
-    url(r'api/post_details/$', views.post_request),
     
+    
+    # url(r'api/post_details/$', views.post_request),
+    # url(r"api/post_details/(?P<pk>[\d]+)/", views.UploadCharityDetails.as_view(), name="upload-details"),
+    url(r'api/post_details/(?P<id>[\d]+)/$', views.post_request),
     url(r'^login', views.LoginUser.as_view()),
     url(r'^token_auth', obtain_jwt_token),
     url(r'^token_refresh', refresh_jwt_token),

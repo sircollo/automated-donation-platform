@@ -8,6 +8,8 @@ from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from .models import *
 from .models import AbstractUser
+from rest_framework.response import Response
+from .serializer import *
 
 
 # get user token
@@ -151,23 +153,15 @@ class CharityPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Charity
         # fields = ['__all__']   
-        fields = ['charity_name']
-        # exclude = ('user')        
+        fields = ['charity_name','charity_image','email','location','country','description','date_formed','target_amount','deadline','mission']
+        # exclude = ('user')            
         
-    def update(self, instance, validated_data):
-        instance.id = validated_data.get('id',instance.id)
-        instance.charity_name = validated_data.get('charity_name', instance.charity_name)
-        instance.email = validated_data.get('email', instance.email)
-        instance.location = validated_data.get('location', instance.location)
-        instance.country = validated_data.get('country', instance.country)
-        instance.description = validated_data.get('description', instance.description)
-        instance.charity_image = validated_data.get('charity_image', instance.charity_image)
-        instance.date_formed = validated_data.get('date_formed', instance.date_formed)
-        instance.date_joined = validated_data.get('date_joined', instance.date_joined)
-        instance.target_amount = validated_data.get('target_amount', instance.target_amount)
-        instance.current_amount = validated_data.get('current_amount', instance.current_amount)
-        instance.deadline = validated_data.get('deadline', instance.deadline)
-        instance.mission = validated_data.get('mission', instance.mission)    
-        instance.save()
-        # return super().update(instance, validated_data)
-        return response
+        
+class CharityDetailsUpdateSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        return CharitySerializer(instance).to_representation(instance)
+
+    class Meta:
+        model = Charity
+        fields = ('email')

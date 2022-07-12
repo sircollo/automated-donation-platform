@@ -541,22 +541,63 @@ class LoginUser(APIView):
 
 import io
 from rest_framework.renderers import JSONRenderer
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.generics import UpdateAPIView
+
+# @csrf_exempt
+# @api_view(['PUT'])
+# def post_request(request):
+#     if request.method == 'PUT':
+#         json_data = request.body
+#         stream = io.BytesIO(json_data)
+#         python_data = JSONParser().parse(stream)
+#         id = python_data.get('id', None)
+        
+#         if id is not None:
+#             user = User.objects.get(id=id)
+#             charity = Charity.objects.get(user=user)
+#             serializer = CharityPostSerializer(charity, data=request.data)
+#             if serializer.is_valid():
+#                 serializer.save()
+#                 res = {'msg':'Updated Successfully'}
+#                 json_data = JSONRenderer().render(res)
+#                 return Response(json_data, content_type='application/json')
+#             res = {'msg':'Invalid'}
+#             json_data = JSONRenderer().render(res)
+#             return JsonResponse(json_data, content_type='application/json')
+
+
+
+class UploadCharityDetails(UpdateAPIView):
+    http_method_names = ['put'] # This is only to allow PUT method on this view.
+    serializer_class = CharityDetailsUpdateSerializer
+    queryset = Charity.objects.all()
+    
+    
+    
+import requests
+@csrf_exempt
 @api_view(['PUT'])
-def post_request(request):
-    if request.method == 'PUT':
-        json_data = request.body
-        stream = io.BytesIO(json_data)
-        python_data = JSONParser().parse(stream)
-        id = python_data.get('id', None)        
-        if id is not None:
-            user = User.objects.get(id=id)
-            charity = Charity.objects.get(user=user)
+def post_request(request,id):
+    try:
+        user = User.objects.get(id=id)
+        charity = Charity.objects.get(user=user)
+    except:
+        response = {}
+        if User.DoesNotExist:
+            response['failed'] = "user not found"
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+        elif Charity.DoesNotExist:
+            response['failed'] = "charity not found"
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            
+   
+#    if request.method =='PUT':
+#        serializer = CharitySerializer(charity, data=request.data)
+    if request.method == 'PUT': 
             serializer = CharityPostSerializer(charity, data=request.data)
+            data = {}
             if serializer.is_valid():
                 serializer.save()
-                res = {'msg':'Updated Successfully'}
-                json_data = JSONRenderer().render(res)
-                return Response(json_data, content_type='application/json')
-            res = {'msg':'Invalid'}
-            json_data = JSONRenderer().render(res)
-            return JsonResponse(json_data, content_type='application/json')
+                data["success"] = "updated successfully"
+                return Response(data=data)
