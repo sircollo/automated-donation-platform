@@ -601,3 +601,17 @@ def post_request(request,id):
                 serializer.save()
                 data["success"] = "updated successfully"
                 return Response(data=data)
+            
+
+@api_view(['GET'])
+@permission_classes((AllowAny,))
+def charity_list_by_user_id(request, user_id):
+    try: 
+        user = User.objects.get(id=user_id)
+        charity = Charity.objects.filter(user=user) 
+    except User.DoesNotExist: 
+        return Response({'message': 'Not found'}, status=status.HTTP_404_NOT_FOUND) 
+ 
+    if request.method == 'GET': 
+        charity_serializer = CharitySerializer(charity, many=True) 
+        return Response(charity_serializer.data)
