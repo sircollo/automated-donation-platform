@@ -360,10 +360,8 @@ class Donations(models.Model):
     comment = models.TextField()
     
     def __str__(self):
-        return self.charity.name
+        return self.charity.charity_name
 
-    def __str__(self):
-        return self.charity.name
 
     class Meta:
         verbose_name_plural = 'Donations'
@@ -390,7 +388,7 @@ class Posts(models.Model):
     charity = models.ForeignKey(Charity, on_delete=models.CASCADE)
     
     def __str__(self):
-        return self.charity.name
+        return self.charity.charity_name
 
     class Meta:
         verbose_name_plural = 'Posts'
@@ -417,7 +415,7 @@ class AnonymousDonation(models.Model):
     payment_method= models.CharField(default='Paypal',max_length=30)
     
     def __str__(self):
-        return self.charity.name
+        return self.charity.charity_name
 
     class Meta:
         verbose_name_plural = 'Anonymous Donations'
