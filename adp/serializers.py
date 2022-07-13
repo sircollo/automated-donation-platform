@@ -140,7 +140,7 @@ class BeneficiariesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Beneficiary
         # fields = '__all__'
-        fields = ('id', 'name', 'contact', 'location','country','donation_received')
+        fields = ('id', 'beneficiary_name', 'contact', 'location','country','donation_received')
         
         
 class AnonymousDonationSerializer(serializers.ModelSerializer):
