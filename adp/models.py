@@ -403,7 +403,7 @@ class Beneficiary(models.Model):
     donation_received = models.CharField(max_length=100)
     
     def __str__(self):
-        return self.name
+        return self.beneficiary_name
 
     class Meta:
         verbose_name_plural = 'Beneficiaries'
