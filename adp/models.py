@@ -395,7 +395,7 @@ class Posts(models.Model):
 
     
 class Beneficiary(models.Model):
-    name = models.CharField(max_length=200)
+    beneficiary_name = models.CharField(max_length=200)
     charity = models.ForeignKey(Charity, on_delete=models.CASCADE)
     contact= models.CharField(max_length=50)
     location = models.CharField(max_length=50)
