@@ -414,7 +414,7 @@ def charitybeneficiaries_list(request, charity_id):
         beneficiary_serializer = BeneficiariesSerializer(beneficiary, many=True) 
         return Response(beneficiary_serializer.data) 
     elif request.method == 'POST':
-        beneficiary_serializer = BeneficiariesSerializer(data=request.POST)
+        beneficiary_serializer = BeneficiariesSerializer(data=request.data)
         if beneficiary_serializer.is_valid():
             beneficiary_serializer.save(charity_id=charity_id)
             return Response(beneficiary_serializer.data, status=status.HTTP_201_CREATED) 
