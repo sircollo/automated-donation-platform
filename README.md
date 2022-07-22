@@ -2,7 +2,7 @@
 ## Authors
 [Collins Sirwani](https://github.com/sircollo)<br />
 [Rachel Kiarie](https://github.com/Rachelnk)<br />
-[Belinda Ntinyari](hhttps://github.com/Bel-94)<br />
+[Belinda Ntinyari](https://github.com/Bel-94)<br />
 [Gabriel Ndolo](https://github.com/Geb54g)<br />
 [Jefferson Karumba](https://github.com/JKLLR)
 
